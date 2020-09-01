@@ -268,13 +268,13 @@ export class Reacteroids extends Component {
         ref={ (divElement) => { this.divElement = divElement } }
         style={{"width" : "100%", "height": "100%"}}
       >
-        { endgame }
+        {/*{ endgame }
         <span className="score current-score" >Score: {this.state.currentScore}</span>
         <span className="score top-score" >Top Score: {this.state.topScore}</span>
         <span className="controls" >
           Use [A][S][W][D] or [←][↑][↓][→] to MOVE<br/>
           Use [SPACE] to SHOOT
-        </span>
+    </span>*/}
         <canvas ref="canvas"
           width={this.state.screen.width * this.state.screen.ratio}
     height={this.state.screen.height * this.state.screen.ratio}
