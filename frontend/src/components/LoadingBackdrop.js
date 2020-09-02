@@ -15,11 +15,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoadingBackdrop() {
   const classes = useStyles();
-  //const state = useSelector((state) => state);
+  const state = useSelector((state) => state.AppReducer);
 
   return (
     <div>
-      <Backdrop className={classes.backdrop} /*open={state.loading}*/ >
+      <Backdrop className={classes.backdrop} open={state.loading} >
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>

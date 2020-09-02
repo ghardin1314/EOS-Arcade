@@ -1,9 +1,10 @@
 import React from 'react';
+import { connect } from "react-redux";
 import { BrowserRouter as Router } from 'react-router-dom';
 import BaseRouter from "./routes";
 // Components
 import CustomLayout from './containers/Layout';
-//import LoadingBackdrop from "./components/LoadingBackdrop";
+import LoadingBackdrop from "./components/LoadingBackdrop";
 
 function App() {
   return (
@@ -11,9 +12,15 @@ function App() {
       <CustomLayout>
         <BaseRouter />
       </CustomLayout>
-      {/*<LoadingBackdrop />*/}
+      <LoadingBackdrop />
     </Router>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    loading: state.loading,
+  };
+};
+
+export default connect(mapStateToProps)(App);
