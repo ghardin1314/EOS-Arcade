@@ -6,11 +6,8 @@ import { randomNumBetweenExcluding } from "./helpers";
 
 import * as actions from "../../store/actions/asteroidActions";
 
-// import {
-//   makeStyles,
-//   createMuiTheme,
-//   ThemeProvider,
-// } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
+import Button from '@material-ui/core/Button';
 
 const KEY = {
   LEFT: 37,
@@ -22,6 +19,14 @@ const KEY = {
   SPACE: 32,
 };
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexFlow: "column",
+    height: "100vh"
+  },
+}));
+
 export function Reacteroids(props) {
   const canvas = useRef(null);
   const divElement = useRef(null);
@@ -30,10 +35,12 @@ export function Reacteroids(props) {
 
   const state = useSelector((state) => state.AstroReducer);
 
-  const ship = [];
-  const asteroids = [];
-  const bullets = [];
-  const particles = [];
+  const classes = useStyles();
+
+  var ships = [];
+  var asteroids = [];
+  var bullets = [];
+  var particles = [];
 
   const updateSelection = (field, selection) => {
     dispatch(actions.updateSelection(field, selection));
@@ -42,12 +49,12 @@ export function Reacteroids(props) {
   // TODO: Lookup handle resize for function
   const handleResize = (value, e) => {
     const screen = {
-      width: divElement.clientWidth,
-      height: divElement.clientHeight,
+      width: divElement.current.clientWidth,
+      height: divElement.current.clientHeight,
       ratio: window.devicePixelRatio || 1,
     };
 
-    updateSelection("screen", screen);
+    updateSelection("screen", { screen });
   };
 
   // TODO: Lookup handle keys for function
@@ -63,6 +70,7 @@ export function Reacteroids(props) {
   };
 
   // component did mount useEffect
+  
   useEffect(() => {
     window.addEventListener("keyup", handleKeys.bind(this, false));
     window.addEventListener("keydown", handleKeys.bind(this, true));
@@ -70,17 +78,23 @@ export function Reacteroids(props) {
 
     // TODO update state with screen dimentions
 
+    console.log(divElement.current.clientWidth);
+    console.log(divElement.current.clientHeight);
+
     const screen = {
-      width: divElement.clientWidth,
-      height: divElement.clientHeight,
+      width: divElement.current.clientWidth,
+      height: divElement.current.clientHeight,
       ratio: window.devicePixelRatio || 1,
     };
+
+    console.log(divElement.current.clientWidth);
+    console.log(divElement.current.clientHeight);
 
     updateSelection("screen", screen);
 
     // TODO update state with context
     const context = canvas.current.getContext("2d");
-    updateSelection("context", context);
+    console.log(context);
 
     startGame();
     requestAnimationFrame(() => {
@@ -93,47 +107,8 @@ export function Reacteroids(props) {
       window.removeEventListener("keydown", handleKeys);
       window.removeEventListener("resize", handleResize);
     };
+    // eslint-disable-next-line
   }, []);
-
-  const update = () => {
-    const context = state.context;
-    const keys = state.keys;
-    const ship = ship[0];
-
-    context.save();
-    context.scale(this.state.screen.ratio, this.state.screen.ratio);
-
-    // Motion trail
-    context.fillStyle = "#000";
-    context.globalAlpha = 0.4;
-    context.fillRect(0, 0, this.state.screen.width, this.state.screen.height);
-    context.globalAlpha = 1;
-
-    // Next set of asteroids
-    if (!asteroids.length) {
-      let count = state.asteroidCount + 1;
-      // TODO: update state of astroid couns
-      updateSelection("astroidCount", count);
-      generateAsteroids(count);
-    }
-
-    // Check for colisions
-    checkCollisionsWith(bullets, asteroids);
-    checkCollisionsWith(ship, asteroids);
-
-    // Remove or render
-    updateObjects(particles, "particles");
-    updateObjects(asteroids, "asteroids");
-    updateObjects(bullets, "bullets");
-    updateObjects(ship, "ship");
-
-    context.restore();
-
-    // Next frame
-    requestAnimationFrame(() => {
-      update();
-    });
-  };
 
   const addScore = (points) => {
     if (state.inGame) {
@@ -155,7 +130,7 @@ export function Reacteroids(props) {
       create: createObject.bind(this),
       onDie: gameOver.bind(this),
     });
-    createObject(ship, "ship");
+    createObject(ship, ships);
 
     // Make asteroids
     asteroids = [];
@@ -174,7 +149,7 @@ export function Reacteroids(props) {
 
   const generateAsteroids = (howMany) => {
     let asteroids = [];
-    let ship = ship[0];
+    let ship = ships[0];
     for (let i = 0; i < howMany; i++) {
       let asteroid = new Asteroid({
         size: 80,
@@ -195,20 +170,20 @@ export function Reacteroids(props) {
         create: createObject.bind(this),
         addScore: addScore.bind(this),
       });
-      createObject(asteroid, "asteroids");
+      createObject(asteroid, asteroids);
     }
   };
 
   const createObject = (item, group) => {
     // Todo this ???
-    this[group].push(item);
+    group.push(item);
   };
 
   const updateObjects = (items, group) => {
     let index = 0;
     for (let item of items) {
       if (item.delete) {
-        this[group].splice(index, 1);
+        group.splice(index, 1);
       } else {
         items[index].render(state);
       }
@@ -242,6 +217,50 @@ export function Reacteroids(props) {
     return false;
   };
 
+  const update = () => {
+    const context = canvas.current.getContext("2d");
+    const ratio = state.screen.ratio
+    const width = state.screen.width
+    const keys = state.keys;
+    const ship = ships[0];
+    
+
+    context.save();
+    context.scale(state.screen.ratio, state.screen.ratio);
+
+    // Motion trail
+    context.fillStyle = "#000";
+    context.globalAlpha = 0.4;
+    console.log(state.screen.height);
+    context.fillRect(0, 0, state.screen.width, state.screen.height);
+    context.globalAlpha = 1;
+
+    // // Next set of asteroids
+    if (!asteroids.length) {
+      let count = state.asteroidCount + 1;
+      // TODO: update state of astroid couns
+      updateSelection("astroidCount", count);
+      generateAsteroids(count);
+    }
+
+    // Check for colisions
+    checkCollisionsWith(bullets, asteroids);
+    checkCollisionsWith(ship, asteroids);
+
+    // Remove or render
+    updateObjects(particles, particles);
+    updateObjects(asteroids, asteroids);
+    updateObjects(bullets, bullets);
+    //updateObjects(ship, ships);
+
+    context.restore();
+
+    // Next frame
+    requestAnimationFrame(() => {
+      update();
+    });
+  };
+
   let endgame;
   let message;
 
@@ -263,12 +282,12 @@ export function Reacteroids(props) {
     );
   }
 
+  const test = () => {
+    console.log(state.screen.width)
+  }
+
   return (
-    <div
-      className="root"
-      ref={divElement}
-      style={{ width: "100%", height: "100%" }}
-    >
+    <div className={classes.root} ref={divElement}>
       {/*{ endgame }
         <span className="score current-score" >Score: {this.state.currentScore}</span>
         <span className="score top-score" >Top Score: {this.state.topScore}</span>
@@ -276,8 +295,9 @@ export function Reacteroids(props) {
           Use [A][S][W][D] or [←][↑][↓][→] to MOVE<br/>
           Use [SPACE] to SHOOT
     </span>*/}
+    <Button variant="contained" onClick={() => {test()}}>Default</Button>
       <canvas
-        ref={ canvas }
+        ref={canvas}
         width={state.screen.width * state.screen.ratio}
         height={state.screen.height * state.screen.ratio}
       />

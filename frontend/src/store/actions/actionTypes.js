@@ -1,1 +1,2 @@
 export const UPDATE_FIELD = "UPDATE_FIELD";
+export const UPDATE_ASTRO = "UPDATE_ASTRO";

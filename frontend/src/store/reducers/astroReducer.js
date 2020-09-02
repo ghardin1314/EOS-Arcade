@@ -29,8 +29,9 @@ const updateSelection = (state, action) => {
 
 const AstroReducer = (state = astroState, action) => {
   switch (action.type) {
-    case actionTypes.UPDATE_FIELD:
-      return updateSelection(state, action);
+    case actionTypes.UPDATE_ASTRO:
+      const test = updateSelection(state, action);
+      return test
     default:
       return state;
   }
