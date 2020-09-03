@@ -1,20 +1,32 @@
-import React from 'react';
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import { connect } from "react-redux";
-import { BrowserRouter as Router } from 'react-router-dom';
 import BaseRouter from "./routes";
 // Components
 import CustomLayout from './containers/Layout';
 import LoadingBackdrop from "./components/LoadingBackdrop";
+import CssBaseline from "@material-ui/core/CssBaseline";
 
-function App() {
+
+class App extends React.Component {
+  render(){
   return (
+    <div>
     <Router>
+      <CssBaseline/>
+      {/* <Paper>
+        Test 1
+      </Paper> */}
       <CustomLayout>
+      {/* <Paper>
+        Test 2
+      </Paper> */}
         <BaseRouter />
       </CustomLayout>
       <LoadingBackdrop />
     </Router>
-  );
+    </div>
+  );}
 }
 
 const mapStateToProps = (state) => {

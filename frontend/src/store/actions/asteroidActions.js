@@ -7,3 +7,16 @@ export const updateSelection = (field, selection) => {
     selection: selection,
   };
 };
+
+export const startAstro = () => {
+  console.log("Midfire")
+  return {
+    type: actionTypes.START_ASTRO,
+  };
+};
+
+export const endAstro = () => {
+  return {
+    type: actionTypes.END_ASTRO,
+  };
+};

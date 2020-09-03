@@ -1,20 +1,23 @@
-import React from 'react'
-import { Reacteroids } from "../components/Reacteroids/Reacteroids"
+import React from "react";
+import Reacteroids from "../components/Reacteroids/Reacteroids";
+
 
 import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
-    root: {
-      flex: "1 1 auto"
-    },
-  }));
+  root_game: {
+    flex: "1",
+  },
+}));
 
 export default function Game() {
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <div className={classes.root}>
-            <Reacteroids />
-        </div>
-    )
+  return (
+    <React.Fragment>
+      <Paper>Test 1</Paper>
+      <Reacteroids />
+    </React.Fragment>
+  );
 }

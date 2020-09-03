@@ -4,6 +4,8 @@ import { Route, Switch } from 'react-router-dom';
 import About from "./containers/About";
 import Game from "./containers/Game";
 
+
+
 const Page404 = ({ location }) => (
   <div>
     <h2>

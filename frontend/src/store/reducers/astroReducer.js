@@ -27,11 +27,27 @@ const updateSelection = (state, action) => {
   });
 };
 
+const startAstro = (state, action) => {
+  console.log("StartedGame")
+  return updateObject(state, {
+    inGame: true
+  })
+}
+
+const endAstro = (state, action) => {
+  return updateObject(state, {
+    inGame: false
+  })
+}
+
 const AstroReducer = (state = astroState, action) => {
   switch (action.type) {
     case actionTypes.UPDATE_ASTRO:
-      const test = updateSelection(state, action);
-      return test
+      return updateSelection(state, action);
+    case actionTypes.START_ASTRO:
+      return startAstro(state, action)
+    case actionTypes.END_ASTRO:
+        return endAstro(state, action)
     default:
       return state;
   }

@@ -1,24 +1,21 @@
 import React from "react";
-
-import CustomTopbar from "../components/Topbar"
-
 import { makeStyles } from "@material-ui/core/styles";
+import CustomTopbar from "../components/Topbar";
 
-const useStyles = makeStyles(theme => ({
-    root: {
-      display: "flex",
-      flexFlow: "column",
-      height: "100vh"
-    }
-  }));
 
-export default function CustomLayour(props) {
-    const classes = useStyles();
+const useStyles = makeStyles((theme) => ({
+  root_layout: {
+    display: "flex",
+    flexFlow: "column",
+  },
+}));
 
-    return (
-        <div className={classes.root}>
-            <CustomTopbar />
-            {props.children}
-        </div>
-    )
+export default function CustomLayout(props) {
+  const classes = useStyles();
+  return (
+    <div className={classes.root_layout}>
+      {/* <CustomTopbar /> */}
+      {props.children}
+    </div>
+  );
 }
