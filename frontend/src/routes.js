@@ -1,10 +1,8 @@
-import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-// Components
-import About from "./containers/About";
-import Game from "./containers/Game";
+import React from "react";
+import { Route, Switch } from "react-router-dom";
 
-
+import About from './containers/About'
+import Astroids from './containers/Astroids'
 
 const Page404 = ({ location }) => (
   <div>
@@ -16,10 +14,10 @@ const Page404 = ({ location }) => (
 
 const BaseRouter = () => (
   <Switch>
-    <Route exact path='/' component={About} />
-    <Route exact path='/Play/' component={Game} />
+    <Route exact path="/" component={About} />
+    <Route exact path="/Play" component={Astroids} />
     <Route component={Page404} />
   </Switch>
 );
 
-export default BaseRouter
+export default BaseRouter;

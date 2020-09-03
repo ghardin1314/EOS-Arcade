@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
-import AstroReducer from "./astroReducer";
-import AppReducer from "./appReducer"
+import AstroReducer from "./AstroReducer";
+import AppReducer from "./AppReducer"
 
 export default combineReducers({
   AstroReducer,

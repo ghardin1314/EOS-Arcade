@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import Ship from "./Ship";
 import Asteroid from "./Asteroid";
 import { randomNumBetweenExcluding } from "./helpers";
-import * as actions from "../../store/actions/asteroidActions";
 
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 import { withStyles } from "@material-ui/core/styles";
 
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import * as actions from "../../store/actions/AstroActions";
 
 const KEY = {
   LEFT: 37,
@@ -39,8 +40,8 @@ class Reacteroids extends Component {
     super();
     this.state = {
       screen: {
-        width: window.innerWidth * 0.9,
-        height: window.innerHeight * 0.8,
+        width: window.innerWidth * 0.5,
+        height: window.innerHeight * 0.5,
         ratio: window.devicePixelRatio || 1,
       },
       context: null,
@@ -51,7 +52,7 @@ class Reacteroids extends Component {
         down: 0,
         space: 0,
       },
-      asteroidCount: 3,
+      asteroidCount: 2,
       currentScore: 0,
       topScore: localStorage["topscore"] || 0,
       // inGame: false,
@@ -65,8 +66,8 @@ class Reacteroids extends Component {
   handleResize(value, e) {
     this.setState({
       screen: {
-        width: window.innerWidth - 100,
-        height: window.innerHeight - 100,
+        width: this.divElement.clientWidth,
+        height: this.divElement.clientHeight,
         ratio: window.devicePixelRatio || 1,
       },
     });
@@ -90,15 +91,16 @@ class Reacteroids extends Component {
 
     this.setState({
       screen: {
-        width: window.innerWidth - 100,
-        height: window.innerHeight - 100,
+        width: this.divElement.clientWidth,
+        height: this.divElement.clientHeight,
         ratio: window.devicePixelRatio || 1,
       },
     });
 
     const context = this.refs.canvas.getContext("2d");
     this.setState({ context: context });
-    this.startGame();
+
+    // this.startGame();
     requestAnimationFrame(() => {
       this.update();
     });
@@ -112,7 +114,9 @@ class Reacteroids extends Component {
 
   update() {
     const context = this.state.context;
+    // eslint-disable-next-line
     const keys = this.state.keys;
+    // eslint-disable-next-line
     const ship = this.ship[0];
 
     context.save();
@@ -121,7 +125,7 @@ class Reacteroids extends Component {
     // Motion trail
     context.fillStyle = "#000";
     context.globalAlpha = 0.4;
-    context.fillRect(50, 50, this.state.screen.width, this.state.screen.height);
+    context.fillRect(0, 0, this.state.screen.width, this.state.screen.height);
     context.globalAlpha = 1;
 
     // Next set of asteroids
@@ -157,12 +161,21 @@ class Reacteroids extends Component {
     }
   }
 
+  // reset() {
+  //   for (let item of this.asteroids) {
+  //     item.delete = true;
+  //   }
+
+  //   for (let item of this.ship) {
+  //     item.delete = true;
+  //   }
+
+  //   this.updateObjects(this.asteroids, "asteroids");
+  //   this.updateObjects(this.ship, "ship");
+  // }
+
   startGame() {
     this.props.onStartGame();
-    this.setState({
-      // inGame: true,
-      currentScore: 0,
-    });
 
     // Make ship
     let ship = new Ship({
@@ -177,7 +190,10 @@ class Reacteroids extends Component {
 
     // Make asteroids
     this.asteroids = [];
-    this.generateAsteroids(this.state.asteroidCount);
+
+    this.setState({ asteroidCount: 3 });
+
+    // this.generateAsteroids(this.asteroidCount);
   }
 
   gameOver() {
@@ -196,8 +212,19 @@ class Reacteroids extends Component {
   }
 
   generateAsteroids(howMany) {
+    console.log("Creating this many Asteroids:")
+    console.log(this.state.asteroidCount)
+    // eslint-disable-next-line
     let asteroids = [];
     let ship = this.ship[0];
+    let shipx = this.state.screen.width / 2;
+    let shipy = this.state.screen.height / 2;
+
+    if (ship) {
+      let shipx = ship.position.x;
+      let shipy = ship.position.y;
+    }
+
     for (let i = 0; i < howMany; i++) {
       let asteroid = new Asteroid({
         size: 80,
@@ -205,14 +232,14 @@ class Reacteroids extends Component {
           x: randomNumBetweenExcluding(
             0,
             this.state.screen.width,
-            ship.position.x - 60,
-            ship.position.x + 60
+            shipx - 200,
+            shipx + 200
           ),
           y: randomNumBetweenExcluding(
             0,
             this.state.screen.height,
-            ship.position.y - 60,
-            ship.position.y + 60
+            shipy - 200,
+            shipy + 200
           ),
         },
         create: this.createObject.bind(this),
@@ -289,33 +316,40 @@ class Reacteroids extends Component {
     }
 
     return (
-      <div
-        className={classes.root_astro}
-        ref={(divElement) => {
-          this.divElement = divElement;
-        }}
-      >
+      <div>
         {/* { endgame } */}
-        <div className={classes.top}>
-          <Grid container spacing={3}>
-            <Paper className={classes.paper}>
-              Score: {this.state.currentScore}
-            </Paper>
-            <Paper className="score top-score">
-              Top Score: {this.state.topScore}
-            </Paper>
-            <Paper className="controls">
-              Use [A][S][W][D] or [←][↑][↓][→] to MOVE
-              <br />
-              Use [SPACE] to SHOOT
-            </Paper>
+        <Grid container justify="center" spacing={2}>
+          <Grid item>
+            <Paper>Score: {this.state.currentScore}</Paper>
           </Grid>
+          <Grid item>
+            <Paper>Use [A][S][W][D] or [←][↑][↓][→] to MOVE</Paper>
+          </Grid>
+          <Grid item>
+            <Paper>Use [SPACE] to SHOOT</Paper>
+          </Grid>
+          <Grid item>
+            <Paper>Top Score: {this.state.topScore}</Paper>
+          </Grid>
+          <Grid item>
+            <Button color="primary"  onClick={this.startGame.bind(this)} disabled = {this.props.inGame}>Start Game</Button>
+          </Grid>
+          {/* <Grid item>
+            <Button onClick={this.reset.bind(this)}>reset</Button>
+          </Grid> */}
+        </Grid>
+        <div
+          className={classes.root_astro}
+          ref={(divElement) => {
+            this.divElement = divElement;
+          }}
+        >
+          <canvas
+            ref="canvas"
+            width={this.state.screen.width * this.state.screen.ratio}
+            height={this.state.screen.height * this.state.screen.ratio}
+          />
         </div>
-        <canvas
-          ref="canvas"
-          width={this.state.screen.width * this.state.screen.ratio}
-          height={this.state.screen.height * this.state.screen.ratio}
-        />
       </div>
     );
   }
@@ -333,7 +367,6 @@ const mapDispatchToProps = (dispatch) => {
     onEndGame: () => dispatch(actions.endAstro()),
   };
 };
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
