@@ -112,6 +112,12 @@ class Reacteroids extends Component {
     window.removeEventListener("resize", this.handleResize);
   }
 
+  componentDidUpdate(prevProps){
+    if(this.props.inGame === true && prevProps.inGame === false){
+      this.startGame()
+    }
+  }
+
   update() {
     const context = this.state.context;
     // eslint-disable-next-line
@@ -212,8 +218,6 @@ class Reacteroids extends Component {
   }
 
   generateAsteroids(howMany) {
-    console.log("Creating this many Asteroids:")
-    console.log(this.state.asteroidCount)
     // eslint-disable-next-line
     let asteroids = [];
     let ship = this.ship[0];

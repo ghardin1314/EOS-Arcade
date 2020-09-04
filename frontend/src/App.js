@@ -4,6 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import BaseRouter from "./routes";
 
 import CustomLayout from "./containers/Layout";
+import LoadingBackdrop from "./components/LoadingBackdrop";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <CustomLayout>
           <BaseRouter />
         </CustomLayout>
+        <LoadingBackdrop />
       </Router>
     </div>
   );
